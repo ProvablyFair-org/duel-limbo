@@ -1,0 +1,12 @@
+{
+  "groups": [
+    {
+      "group": "win-lose",
+      "observedWins": 2965,
+      "expectedWins": 2943.461424893386,
+      "chi2": 0.2551380849073239,
+      "df": 1,
+      "pValue": 0.6134802065807266
+    }
+  ]
+}

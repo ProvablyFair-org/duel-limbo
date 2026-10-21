@@ -1,0 +1,27 @@
+{
+  "name": "duel-limbo-audit",
+  "version": "1.2.0",
+  "description": "Provably fair audit — Duel.com Limbo",
+  "scripts": {
+    "test": "mocha && npm run verify",
+    "verify": "ts-node tests/verify.ts",
+    "report": "PF_EMIT=1 ts-node tests/verify.ts",
+    "simulate": "PF_EMIT=1 ts-node src/simulate.ts",
+    "simulate:run": "ts-node src/simulate.ts",
+    "test:full": "npm run simulate:run && mocha && npm run verify",
+    "power": "ts-node src/capture-power.ts",
+    "mutate": "node scripts/mutate.mjs",
+    "release-manifest": "node scripts/release-manifest.mjs",
+    "rtp-claim:write": "ts-node src/rtp-settings.ts"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10",
+    "@types/node": "^22",
+    "mocha": "^11",
+    "ts-node": "^10",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}

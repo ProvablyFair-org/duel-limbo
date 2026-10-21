@@ -1,0 +1,647 @@
+[
+  {
+    "name": "M01 revealed plaintext forged (record 5), dataset re-pinned",
+    "step": 1,
+    "file": "data/limbo-master.json",
+    "find": "\"serverSeed\": \"f71193f711218c3d2fe6a829d90af24f8291a1c558b5b1def3f287ae0bc2bfce\"",
+    "replace": "\"serverSeed\": \"f71193f711218c3d2fe6a829d90af24f8291a1c558b5b1def3f287ae0bc2bfc0\"",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 1 —",
+    "guard": "Step 1: every revealed plaintext must open a commitment published at an earlier record"
+  },
+  {
+    "name": "M02 forward commitment broken (record 20 nextServerSeedHash), re-pinned",
+    "step": 2,
+    "file": "data/limbo-master.json",
+    "find": "\"nextServerSeedHash\": \"3e0fd5ea8a5bd741816238308a94874e8cff399f7e85dad14740b48adb366bf6\",\n        \"serverSeed\"",
+    "replace": "\"nextServerSeedHash\": \"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\n        \"serverSeed\"",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 2 —",
+    "guard": "Step 2: chain adjacency recomputed from operator fields"
+  },
+  {
+    "name": "M03 bet timestamp moved into the next rotation window, re-pinned",
+    "step": 3,
+    "file": "data/limbo-master.json",
+    "find": "\"at\": \"2026-08-31T17:31:24.143Z\",\n      \"phase\": \"A\"",
+    "replace": "\"at\": \"2026-08-31T20:00:00.000Z\",\n      \"phase\": \"A\"",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 3 —",
+    "guard": "Step 3: every bet must carry the commitment and client seed of the window it was placed in"
+  },
+  {
+    "name": "M04 reveal of a betting epoch withheld (record 10 plaintext nulled), re-pinned",
+    "step": 4,
+    "file": "data/limbo-master.json",
+    "find": "\"serverSeed\": \"157b6e030d789bc19382aa8bd27e90f41705f384b95291a8c96df95c14b9ee0f\"",
+    "replace": "\"serverSeed\": null",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 4 —",
+    "guard": "Step 4: 100% of EXPECTED_BETS must sit under a revealed seed"
+  },
+  {
+    "name": "M05 one served result +1e-6, re-pinned",
+    "step": 5,
+    "file": "data/limbo-master.json",
+    "find": "\"result\": \"1.271129\",\n        \"is_win\": false,\n        \"amount_currency\": \"0.012500000000000000\",\n        \"amount_won\": \"0\",\n        \"target\": \"353.28\"",
+    "replace": "\"result\": \"1.271130\",\n        \"is_win\": false,\n        \"amount_currency\": \"0.012500000000000000\",\n        \"amount_won\": \"0\",\n        \"target\": \"353.28\"",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 5 —",
+    "guard": "Step 5: exact integer-unit reproduction"
+  },
+  {
+    "name": "M05b draw domain off-by-one (2^32 denominator)",
+    "step": 5,
+    "file": "src/rng.ts",
+    "find": "export const MAX_U32: number = 4294967296;",
+    "replace": "export const MAX_U32: number = 4294967296 + 1; // MUTATED",
+    "runner": "verify",
+    "expect": "[FAIL] Step 5 —",
+    "guard": "Step 5 must reject a wrong result formula"
+  },
+  {
+    "name": "M05c operator Verify-tab file logic changed (key bytes XOR 1) and re-pinned",
+    "step": 5,
+    "runner": "verify",
+    "expect": "OPERATOR VERIFY-TAB CODE PARITY",
+    "guard": "LIMBO-09: forged evidence — Duel's vendored Limbo Verify-tab code is changed on an uncited line AND its SHA-256 pin re-computed, so the hash check accepts it; executing it on every bet must expose it.",
+    "edits": [
+      {
+        "file": "evidence/verify-tab/duel-verify-tab-limbo-2026-09-26.js",
+        "find": "bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);",
+        "replace": "bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16) ^ 1;"
+      }
+    ],
+    "repin": [
+      {
+        "file": "src/operator-verifier.ts",
+        "find": "be69447465682f2b5fd674ead1cd55eab6d9d89e26b8a5a46a0c600898d62bd1",
+        "hashOf": "evidence/verify-tab/duel-verify-tab-limbo-2026-09-26.js"
+      }
+    ]
+  },
+  {
+    "name": "M05d operator Verify-tab file byte changed without re-pin",
+    "step": 5,
+    "runner": "verify",
+    "expect": "does not match its pinned SHA-256",
+    "guard": "LIMBO-09: the vendored operator file must hash to its pin before it runs.",
+    "file": "evidence/verify-tab/duel-verify-tab-limbo-2026-09-26.js",
+    "find": "// Code written in javascript",
+    "replace": "// Code written in JavaScript"
+  },
+  {
+    "name": "M05e operator runner changed without re-pin",
+    "step": 5,
+    "runner": "verify",
+    "expect": "does not match its pinned SHA-256",
+    "guard": "LIMBO-09: the runner that executes the operator file is pinned too.",
+    "file": "verifier-parity/operator/run-operator-verifier.cjs",
+    "find": "const ROUND_TIMEOUT_MS = 30_000;",
+    "replace": "const ROUND_TIMEOUT_MS = 31_000;"
+  },
+  {
+    "name": "M05f operator runner forged (calls the file with nonce + 1) and re-pinned",
+    "step": 5,
+    "runner": "verify",
+    "expect": "OPERATOR VERIFY-TAB CODE PARITY",
+    "guard": "LIMBO-09: a re-pinned runner that feeds the operator code the wrong input must be caught by comparing its output with the served result, not only by the pin.",
+    "edits": [
+      {
+        "file": "verifier-parity/operator/run-operator-verifier.cjs",
+        "find": "const CALL = (m) => m.validateLimboResult(m.serverSeed, m.clientSeed, m.nonce);",
+        "replace": "const CALL = (m) => m.validateLimboResult(m.serverSeed, m.clientSeed, m.nonce + 1);"
+      }
+    ],
+    "repin": [
+      {
+        "file": "src/operator-verifier.ts",
+        "find": "6d094ef0bddbca4493466f7310dcf7ba34770d5262243d8c70ca999597e6ca06",
+        "hashOf": "verifier-parity/operator/run-operator-verifier.cjs"
+      }
+    ]
+  },
+  {
+    "name": "M05g result rounded half-up instead of truncated to 6 dp",
+    "step": 5,
+    "runner": "verify",
+    "expect": "[FAIL] Step 5 —",
+    "guard": "Step 5 must reject a result rounded instead of truncated (docs/ALGORITHM.md §2 Step 2: half-up matches 3,859/7,700). Retargeted 20 Oct 2026: until then M05g broke a src/rng.ts operator citation; the citation table was removed with the port.",
+    "file": "src/rng.ts",
+    "find": "const units = (MAX_U32_BIG * RESULT_SCALE_BIG) / (BigInt(u) + BigInt(1));",
+    "replace": "const units = (MAX_U32_BIG * RESULT_SCALE_BIG + (BigInt(u) + BigInt(1)) / BigInt(2)) / (BigInt(u) + BigInt(1)); // MUTATED: half-up"
+  },
+  {
+    "name": "M06 negative control neutered (nonce+1 replaced by the same nonce)",
+    "step": 6,
+    "file": "tests/steps/determinism.ts",
+    "find": "nonceCtl = computeResultUnitsFromBuffer(key, sample.response.client_seed, sample.response.nonce + 1) !== r0;",
+    "replace": "nonceCtl = computeResultUnitsFromBuffer(key, sample.response.client_seed, sample.response.nonce) !== r0;",
+    "runner": "verify",
+    "expect": "[FAIL] Step 6 —",
+    "guard": "Step 6: a control that cannot fire must fail"
+  },
+  {
+    "name": "M07 nonce moved out of the declared window (49 → 50), re-pinned",
+    "step": 7,
+    "file": "data/limbo-master.json",
+    "find": "\"nonce\": 49,\n        \"server_seed_hashed\": \"6da4c8020d776be303c9e727017b8023e5a6c27a58b43174a2556eaf27197eed\"",
+    "replace": "\"nonce\": 50,\n        \"server_seed_hashed\": \"6da4c8020d776be303c9e727017b8023e5a6c27a58b43174a2556eaf27197eed\"",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 7 —",
+    "guard": "Step 7: nonces must be exactly NONCE_BASE..NONCE_BASE+EPOCH_SIZE-1"
+  },
+  {
+    "name": "M08 winning credit +1e-18, re-pinned",
+    "step": 8,
+    "file": "data/limbo-master.json",
+    "find": "\"amount_won\": \"0.033625\",\n        \"target\": \"2.69\",\n        \"win_chance\": \"0.371375464684014870\",\n        \"multiplier\": \"2.690000000000000000\",\n        \"nonce\": 3,\n        \"server_seed_hashed\": \"6da4c8020d776be303c9e727017b8023e5a6c27a58b43174a2556eaf27197eed\"",
+    "replace": "\"amount_won\": \"0.033625000000000001\",\n        \"target\": \"2.69\",\n        \"win_chance\": \"0.371375464684014870\",\n        \"multiplier\": \"2.690000000000000000\",\n        \"nonce\": 3,\n        \"server_seed_hashed\": \"6da4c8020d776be303c9e727017b8023e5a6c27a58b43174a2556eaf27197eed\"",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 8 —",
+    "guard": "Step 8: exact on the 1e-20 money grid"
+  },
+  {
+    "name": "M08b payout formula shaved (stake x target x 0.999)",
+    "step": 8,
+    "file": "tests/steps/payouts.ts",
+    "find": "const expected = b.response.is_win ? stake * tgt : 0n;",
+    "replace": "const expected = b.response.is_win ? stake * tgt * 999n / 1000n : 0n;",
+    "runner": "verify",
+    "expect": "[FAIL] Step 8 —",
+    "guard": "Step 8 must reject a shaved payout expectation"
+  },
+  {
+    "name": "M09 edge-bracket precision threshold tightened below the measured width",
+    "step": 9,
+    "file": "tests/steps/payouts.ts",
+    "find": "const TIGHT_PP = 0.10;",
+    "replace": "const TIGHT_PP = 0.01;",
+    "runner": "verify",
+    "expect": "[FLAG] Step 9 —",
+    "guard": "Step 9 FLAGs a bracket wider than the threshold rather than presenting it as a measurement"
+  },
+  {
+    "name": "M10 served win flag flipped on one bet, re-pinned",
+    "step": 10,
+    "file": "data/limbo-master.json",
+    "find": "\"result\": \"1.512329\",\n        \"is_win\": true,\n        \"amount_currency\": \"0.012500000000000000\",\n        \"amount_won\": \"0.012625\"",
+    "replace": "\"result\": \"1.512329\",\n        \"is_win\": false,\n        \"amount_currency\": \"0.012500000000000000\",\n        \"amount_won\": \"0.012625\"",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 10 —",
+    "guard": "Step 10: settlements reproduced from the measured edge"
+  },
+  {
+    "name": "M11 operator-reported edge changed on one bet (0.1 → 0.5), re-pinned",
+    "step": 11,
+    "file": "data/limbo-master.json",
+    "find": "\"house_edge_percentage\": 0.1,",
+    "replace": "\"house_edge_percentage\": 0.5,",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 11 —",
+    "guard": "Step 11: the reported distribution edge must be single-valued and inside the measured bracket"
+  },
+  {
+    "name": "M12 reported win_chance on one bet forged (+0.05), re-pinned",
+    "step": 12,
+    "file": "data/limbo-master.json",
+    "find": "\"win_chance\": \"0.371375464684014870\",\n        \"multiplier\": \"2.690000000000000000\",\n        \"nonce\": 3,\n        \"server_seed_hashed\": \"6da4c8020d776be303c9e727017b8023e5a6c27a58b43174a2556eaf27197eed\"",
+    "replace": "\"win_chance\": \"0.421375464684014878\",\n        \"multiplier\": \"2.690000000000000000\",\n        \"nonce\": 3,\n        \"server_seed_hashed\": \"6da4c8020d776be303c9e727017b8023e5a6c27a58b43174a2556eaf27197eed\"",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FLAG] Step 12 —",
+    "guard": "Step 12: reported win chance vs the measured bracket"
+  },
+  {
+    "name": "M13 dataset byte edited without re-pin, pre-flight abort disabled",
+    "step": 13,
+    "edits": [
+      {
+        "file": "tests/verify.ts",
+        "find": "if (!hashCheck.match) process.exit(1);",
+        "replace": "/* MUTATED: abort disabled */"
+      },
+      {
+        "file": "data/limbo-master.json",
+        "find": "\"capturedAt\": \"2026-08-31T20:35:59.803Z\"",
+        "replace": "\"capturedAt\": \"2026-08-31T20:35:59.804Z\""
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 13 —",
+    "guard": "Step 13 catches an unpinned dataset edit on its own"
+  },
+  {
+    "name": "M14 one bet relabelled phase A → B (counts only), re-pinned",
+    "step": 14,
+    "file": "data/limbo-master.json",
+    "find": "\"at\": \"2026-08-31T17:29:28.972Z\",\n      \"phase\": \"A\"",
+    "replace": "\"at\": \"2026-08-31T17:29:28.972Z\",\n      \"phase\": \"B\"",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 14 —",
+    "guard": "Step 14: phase counts bound to src/capture-plan.ts PLAN"
+  },
+  {
+    "name": "M15 distinct-target floor raised above the capture (10 → 100000)",
+    "step": 15,
+    "file": "tests/steps/dataset.ts",
+    "find": "targets.length >= MIN_DISTINCT_TARGETS ? 'PASS' : 'FLAG',",
+    "replace": "targets.length >= 100000 ? 'PASS' : 'FLAG',",
+    "runner": "verify",
+    "expect": "[FLAG] Step 15 —",
+    "guard": "Step 15 FLAGs a narrow target spread"
+  },
+  {
+    "name": "M16 one Phase C bet repriced by one 1e-18 unit of win_chance, re-pinned",
+    "step": 16,
+    "file": "data/limbo-master.json",
+    "find": "\"win_chance\": \"0.989108910891089109\",\n        \"multiplier\": \"1.010000000000000000\",\n        \"nonce\": 0,\n        \"server_seed_hashed\": \"3e8077a2c4e6f4186c23924bbbf02d028ea43cc53cd8b71e5d1d9d5ce2c7988e\"",
+    "replace": "\"win_chance\": \"0.989108910891089108\",\n        \"multiplier\": \"1.010000000000000000\",\n        \"nonce\": 0,\n        \"server_seed_hashed\": \"3e8077a2c4e6f4186c23924bbbf02d028ea43cc53cd8b71e5d1d9d5ce2c7988e\"",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 16 —",
+    "guard": "Step 16: elevated-stake bets priced exactly as base-stake bets at the same target"
+  },
+  {
+    "name": "M17 a Phase D and a Phase A bet swap phase labels (counts unchanged), re-pinned",
+    "step": 17,
+    "edits": [
+      {
+        "file": "data/limbo-master.json",
+        "find": "\"at\": \"2026-08-31T19:37:54.667Z\",\n      \"phase\": \"D\"",
+        "replace": "\"at\": \"2026-08-31T19:37:54.667Z\",\n      \"phase\": \"A\""
+      },
+      {
+        "file": "data/limbo-master.json",
+        "find": "\"at\": \"2026-08-31T17:29:37.786Z\",\n      \"phase\": \"A\"",
+        "replace": "\"at\": \"2026-08-31T17:29:37.786Z\",\n      \"phase\": \"D\""
+      }
+    ],
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 17 —",
+    "guard": "Step 17: Phase D bound to one auditor seed per epoch"
+  },
+  {
+    "name": "M18 Pass 1 win count forged (+5,000 at 1.10x) and the artifact re-pinned",
+    "step": 18,
+    "file": "outputs/simulation-results.json",
+    "find": "\"rounds\": 1000000,\n        \"wins\": 908370,",
+    "replace": "\"rounds\": 1000000,\n        \"wins\": 913370,",
+    "repin": [
+      {
+        "file": "src/artifact-pins.ts",
+        "find": "1ab73639811451f4a75212f83fde7651fbe9bb3e974473523c2be70ed789d2ae",
+        "hashOf": "outputs/simulation-results.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 18 —",
+    "guard": "Step 18 re-derives RTP from the census against the exact win probability"
+  },
+  {
+    "name": "M18b uniformity census forged (one bin +500, one −500) and re-pinned",
+    "step": 18,
+    "file": "outputs/simulation-results.json",
+    "find": "\"counts\": [\n        2002,\n        1985,",
+    "replace": "\"counts\": [\n        2502,\n        1485,",
+    "repin": [
+      {
+        "file": "src/artifact-pins.ts",
+        "find": "1ab73639811451f4a75212f83fde7651fbe9bb3e974473523c2be70ed789d2ae",
+        "hashOf": "outputs/simulation-results.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 18 —",
+    "guard": "Step 18 re-derives the uniformity chi-squared from the stored bin counts"
+  },
+  {
+    "name": "M19 Pass 2 rule threshold moved above the observed Z (−3.09 → +3)",
+    "step": 19,
+    "file": "tests/steps/simulation.ts",
+    "find": "const PASS2_Z_CRIT = -3.0902323061678132;",
+    "replace": "const PASS2_Z_CRIT = 3;",
+    "runner": "verify",
+    "expect": "[FAIL] Step 19 —",
+    "guard": "Step 19: the cherry-pick rule can fire"
+  },
+  {
+    "name": "M19b Pass 2 window-0 replay compared against a shifted result",
+    "step": 19,
+    "file": "tests/steps/simulation.ts",
+    "find": "unitsFromDecimal(servedResult[j], 6) !== BigInt(k)",
+    "replace": "unitsFromDecimal(servedResult[j], 6) !== BigInt(k + 1)",
+    "runner": "verify",
+    "expect": "[FAIL] Step 19 —",
+    "guard": "Step 19: window 0 must replay the captured results"
+  },
+  {
+    "name": "M20 scaling-edge floor doubled",
+    "step": 20,
+    "file": "src/scaling-edge.ts",
+    "find": "      minEdge:         parseFloat(se.min_edge),",
+    "replace": "      minEdge:         parseFloat(se.min_edge) * 2, // MUTATED",
+    "runner": "verify",
+    "expect": "[FAIL] Step 20 —",
+    "guard": "Step 20 FAILs when the per-bet exact edge is off the declared floor"
+  },
+  {
+    "name": "M21 rtp-convergence.html byte edited without re-pin",
+    "step": 21,
+    "file": "outputs/rtp-convergence.html",
+    "find": "Duel Limbo — RTP convergence",
+    "replace": "Duel Limbo - RTP convergence",
+    "runner": "verify",
+    "expect": "[FAIL] Step 21 —",
+    "guard": "Step 21: pinned artifact bytes"
+  },
+  {
+    "name": "M21b generatedAt re-inserted into the simulation artifact AND re-pinned",
+    "step": 21,
+    "file": "outputs/simulation-results.json",
+    "find": "{\n  \"masterSeed\"",
+    "replace": "{\n  \"generatedAt\": \"2026-09-26T00:00:00.000Z\",\n  \"masterSeed\"",
+    "repin": [
+      {
+        "file": "src/artifact-pins.ts",
+        "find": "1ab73639811451f4a75212f83fde7651fbe9bb3e974473523c2be70ed789d2ae",
+        "hashOf": "outputs/simulation-results.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "carries run metadata",
+    "guard": "Step 21: a pinned artifact must carry no run metadata even when its pin matches"
+  },
+  {
+    "name": "M21c operator config edited without re-pin",
+    "step": 21,
+    "file": "limboConfig.json",
+    "find": "\"max_loss_fraction\": \"0.12\"",
+    "replace": "\"max_loss_fraction\": \"0.13\"",
+    "runner": "verify",
+    "expect": "limboConfig.json sha256",
+    "guard": "Step 21: limboConfig.json is pinned"
+  },
+  {
+    "name": "M22 client seed dropped from the HMAC message",
+    "step": 22,
+    "file": "src/rng.ts",
+    "find": "const message = Buffer.from(`${clientSeed}:${nonceText(nonce)}`, \"utf8\");",
+    "replace": "const message = Buffer.from(`:${nonceText(nonce)}`, \"utf8\"); // MUTATED: client seed dropped",
+    "runner": "verify",
+    "expect": "[FAIL] Step 22 —",
+    "guard": "Step 22: collisions held to the exact lattice rate"
+  },
+  {
+    "name": "M23 draw width reduced to 7 hex characters",
+    "step": 23,
+    "file": "src/rng.ts",
+    "find": "export const DRAW_HEX_CHARS: number = 8;",
+    "replace": "export const DRAW_HEX_CHARS: number = 7;",
+    "runner": "verify",
+    "expect": "[FAIL] Step 23 —",
+    "guard": "Step 23: the draw must be the full 32-bit domain"
+  },
+  {
+    "name": "M24 declared edge 0.1% → 0.5% (win rule evaluated at the wrong edge)",
+    "step": 24,
+    "file": "src/capture-plan.ts",
+    "find": "export const CLAIMED_EDGE: { num: number; den: number } = { num: 1, den: 1000 };",
+    "replace": "export const CLAIMED_EDGE: { num: number; den: number } = { num: 5, den: 1000 };",
+    "runner": "verify",
+    "expect": "[FAIL] Step 24 —",
+    "guard": "Step 24: served win flags vs the exact rule at the declared edge"
+  },
+  {
+    "name": "M25 reported win_chance +1e-17 on one bet, re-pinned",
+    "step": 25,
+    "file": "data/limbo-master.json",
+    "find": "\"win_chance\": \"0.062281795511221945\",\n        \"multiplier\": \"16.040000000000000000\",\n        \"nonce\": 11,\n        \"server_seed_hashed\": \"6da4c8020d776be303c9e727017b8023e5a6c27a58b43174a2556eaf27197eed\"",
+    "replace": "\"win_chance\": \"0.062281795511221955\",\n        \"multiplier\": \"16.040000000000000000\",\n        \"nonce\": 11,\n        \"server_seed_hashed\": \"6da4c8020d776be303c9e727017b8023e5a6c27a58b43174a2556eaf27197eed\"",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FAIL] Step 25 —",
+    "guard": "Step 25: served win_chance equals (1-e)/T to one 1e-18 unit"
+  },
+  {
+    "name": "M26 claim compared at 4 printed decimals instead of 1",
+    "step": 26,
+    "file": "src/capture-plan.ts",
+    "find": "export const CLAIM_PRINTED_DECIMALS_PCT = 1;",
+    "replace": "export const CLAIM_PRINTED_DECIMALS_PCT = 4;",
+    "runner": "verify",
+    "expect": "[FLAG] Step 26 —",
+    "guard": "Step 26: a target off the claim is a FLAG with its magnitude"
+  },
+  {
+    "name": "M27 operator max_target lowered to 500 (config re-pinned)",
+    "step": 27,
+    "file": "limboConfig.json",
+    "find": "\"max_target\": \"100000.00\"",
+    "replace": "\"max_target\": \"500.00\"",
+    "repin": [
+      {
+        "file": "src/scaling-edge.ts",
+        "find": "676beff74f5a3c2e9d634a49e994acfc5adc0aa1a19fdc1ee4be36a916b07379",
+        "hashOf": "limboConfig.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FLAG] Step 27 —",
+    "guard": "Step 27: every target within the declared bounds"
+  },
+  {
+    "name": "M28 per-decade floor raised above the capture (50 → 5000)",
+    "step": 28,
+    "file": "src/capture-plan.ts",
+    "find": "export const PHASE_A_MIN_PER_DECADE = 50;",
+    "replace": "export const PHASE_A_MIN_PER_DECADE = 5000;",
+    "runner": "verify",
+    "expect": "[FLAG] Step 28 —",
+    "guard": "Step 28: Phase A coverage per declared decade"
+  },
+  {
+    "name": "M29 one Zero Edge rakeback +1e-7, re-pinned",
+    "step": 29,
+    "file": "data/limbo-master.json",
+    "find": "\"amount_currency\": \"0.000012500000000000\",",
+    "replace": "\"amount_currency\": \"0.000012600000000000\",",
+    "repin": [
+      {
+        "file": "src/loader.ts",
+        "find": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+        "hashOf": "data/limbo-master.json"
+      }
+    ],
+    "runner": "verify",
+    "expect": "[FLAG] Step 29 —",
+    "guard": "Step 29: rakeback exactly 0.001 x amount"
+  },
+  {
+    "name": "M30 live-fit KS threshold raised above the observed p (0.01 → 0.5)",
+    "step": 30,
+    "file": "tests/steps/exact.ts",
+    "find": "const ok = ks.pValue >= 0.01 && Math.abs(z) < 3;",
+    "replace": "const ok = ks.pValue >= 0.5 && Math.abs(z) < 3;",
+    "runner": "verify",
+    "expect": "[INFO] Step 30 —",
+    "guard": "Step 30 can report a deviation (INFO: informational, never counted, verdict unchanged — profile policy INFORMATIONAL, Mike 2026-09-29); the run is rejected by the reproduction gate because the committed Step 30 record changes, and the marker proves Step 30 itself fired"
+  },
+  {
+    "name": "M09c draw read little-endian (mocha: spec self-test)",
+    "step": 0,
+    "file": "src/rng.ts",
+    "find": "return digest.readUInt32BE(0);",
+    "replace": "return digest.readUInt32LE(0); // MUTATED: byte order",
+    "runner": "mocha",
+    "expect": "spec vector and property checks pass",
+    "guard": "the spec self-test (tests/limbo/RngSpecTests.ts, docs/ALGORITHM.md §5 vectors) must reject a draw read in the wrong byte order. Retargeted 20 Oct 2026: until then M09c moved a src/rng.ts operator citation off its line; the citation table was removed with the port."
+  },
+  {
+    "name": "MC3a one setting misses its stated figure: target 5000.00× needs a 1 % higher result to win in the model",
+    "step": 26,
+    "runner": "test",
+    "expect": "VERDICT: RTP FIGURE OVERSTATED",
+    "expectExit": 5,
+    "regen": [
+      "rtp-table",
+      "record"
+    ],
+    "guard": "FIXPASS2 class C3, 14 Oct 2026: (i) a miss on ONE setting must end RTP FIGURE OVERSTATED, exit 5, never exit 1 or 2. The smallest winning result for one target no captured bet used (5000.00×; Phase A/D targets run 1.01–1000×) is raised by 1 % in the game model (src/exact.ts winMinUnits, which the RTP table and the exact-arithmetic steps read): that setting wins about 1 % less often and returns about 98.9 %, beyond the band under the flat 99.9 % claim. Table and record regenerated in the copy, so the package is consistent and the only thing wrong is the miss. Runner test = mocha then verify, as npm test runs them: no unit test, label check, simulation check or operator-FLAG branch may end the run first.",
+    "file": "src/exact.ts",
+    "find": "  const den = BigInt(b - a);\n  return Number((num + den - 1n) / den);",
+    "replace": "  const den = BigInt(b - a);\n  const k = Number((num + den - 1n) / den);\n  return t === 500000 ? Math.ceil(k * 1.01) : k; // MUTATION: one target 1 % harder to win"
+  },
+  {
+    "name": "MC3as the same change as MC3a, RTP table NOT regenerated: a stale table is a reproduction failure",
+    "step": 26,
+    "runner": "verify",
+    "expect": "DIFFERS from this run",
+    "expectExit": 1,
+    "guard": "Ruling 14 Oct 2026 (FIXPASS2): a committed RTP table that does not equal the run or its pin is a reproduction failure, exit 1, miss or no miss. MC3a without regenerating the table must end exit 1 with the table reported as differing, never exit 5: the miss is only reported on a consistent package.",
+    "file": "src/exact.ts",
+    "find": "  const den = BigInt(b - a);\n  return Number((num + den - 1n) / den);",
+    "replace": "  const den = BigInt(b - a);\n  const k = Number((num + den - 1n) / den);\n  return t === 500000 ? Math.ceil(k * 1.01) : k; // MUTATION: one target 1 % harder to win"
+  },
+  {
+    "name": "MC3b the stated figure raised in the claim source: 99.9 % -> 100.1 %",
+    "step": 26,
+    "runner": "test",
+    "expect": "VERDICT: RTP FIGURE OVERSTATED",
+    "expectExit": 5,
+    "regen": [
+      "rtp-table",
+      "record"
+    ],
+    "guard": "FIXPASS2 class C3, 14 Oct 2026: (ii) the published figure raised where the claim is stated (src/rtp-settings.ts RTP_CLAIM, scaling_edge min_edge 0.001) to 100.1 %, 0.2 pp above what every setting really returns: every setting misses by more than the 0.1 pp band, so the run must end RTP FIGURE OVERSTATED, exit 5. Table and record regenerated in the copy. Runner test = mocha then verify, as npm test runs them: no unit test, label check or operator-FLAG branch may end the run first.",
+    "file": "src/rtp-settings.ts",
+    "find": "  kind: 'flat',\n  rtp: '0.999',",
+    "replace": "  kind: 'flat',\n  rtp: '1.001', // MUTATION: stated figure raised"
+  },
+  {
+    "name": "MC3bs the same change as MC3b, RTP table NOT regenerated: a stale table is a reproduction failure",
+    "step": 26,
+    "runner": "verify",
+    "expect": "DIFFERS from this run",
+    "expectExit": 1,
+    "guard": "Ruling 14 Oct 2026 (FIXPASS2): a committed RTP table that does not equal the run or its pin is a reproduction failure, exit 1, miss or no miss. MC3b without regenerating the table must end exit 1 with the table reported as differing, never exit 5: the miss is only reported on a consistent package.",
+    "file": "src/rtp-settings.ts",
+    "find": "  kind: 'flat',\n  rtp: '0.999',",
+    "replace": "  kind: 'flat',\n  rtp: '1.001', // MUTATION: stated figure raised"
+  }
+]

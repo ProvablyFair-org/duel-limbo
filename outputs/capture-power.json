@@ -1,0 +1,211 @@
+{
+  "generatedBy": "src/capture-power.ts",
+  "trialsPerRow": 1500,
+  "declaredEdge": 0.001,
+  "step9TightThresholdPP": 0.1,
+  "frozenPlan": {
+    "A": 5000,
+    "B": 2000,
+    "C": 200,
+    "D": 500,
+    "total": 7700,
+    "turnoverUSD": 2075
+  },
+  "frozenPlanPower": [
+    {
+      "edge": 0.001,
+      "phaseA": 5000,
+      "phaseB": 2000,
+      "phaseBTarget": 1.01,
+      "totalBets": 7700,
+      "pStep9Pass": 0.7833333333333333,
+      "pStep9PassSE": 0.01063711183301878,
+      "pWithin0_05pp": 0.4246666666666667,
+      "pWithin0_02pp": 0.11733333333333333,
+      "widthPP": {
+        "p05": 0.011932736882247497,
+        "p50": 0.05726477985206202,
+        "p95": 0.16448160052637828,
+        "max": 0.3405448554474333,
+        "mean": 0.06913047001542448
+      },
+      "missedTrueEdge": 0
+    },
+    {
+      "edge": 0.01,
+      "phaseA": 5000,
+      "phaseB": 2000,
+      "phaseBTarget": 1.01,
+      "totalBets": 7700,
+      "pStep9Pass": 0.79,
+      "pStep9PassSE": 0.010516653460107925,
+      "pWithin0_05pp": 0.42733333333333334,
+      "pWithin0_02pp": 0.11933333333333333,
+      "widthPP": {
+        "p05": 0.011873598720102407,
+        "p50": 0.056596006590348136,
+        "p95": 0.15612609953900014,
+        "max": 0.30975920752617236,
+        "mean": 0.06717286291036703
+      },
+      "missedTrueEdge": 0
+    }
+  ],
+  "phaseBTargetComparison": [
+    {
+      "edge": 0.001,
+      "phaseA": 5000,
+      "phaseB": 2000,
+      "phaseBTarget": 1.01,
+      "totalBets": 7700,
+      "pStep9Pass": 0.7833333333333333,
+      "pStep9PassSE": 0.01063711183301878,
+      "pWithin0_05pp": 0.4246666666666667,
+      "pWithin0_02pp": 0.11733333333333333,
+      "widthPP": {
+        "p05": 0.011932736882247497,
+        "p50": 0.05726477985206202,
+        "p95": 0.16448160052637828,
+        "max": 0.3405448554474333,
+        "mean": 0.06913047001542448
+      },
+      "missedTrueEdge": 0
+    },
+    {
+      "edge": 0.001,
+      "phaseA": 5000,
+      "phaseB": 2000,
+      "phaseBTarget": 10,
+      "totalBets": 7700,
+      "pStep9Pass": 0.31733333333333336,
+      "pStep9PassSE": 0.012017567388033484,
+      "pWithin0_05pp": 0.11933333333333333,
+      "pWithin0_02pp": 0.025333333333333333,
+      "widthPP": {
+        "p05": 0.029503349133130907,
+        "p50": 0.14303546090018715,
+        "p95": 0.3795427395042572,
+        "max": 0.8470903058893864,
+        "mean": 0.16651047508875033
+      },
+      "missedTrueEdge": 0
+    },
+    {
+      "edge": 0.001,
+      "phaseA": 5000,
+      "phaseB": 2000,
+      "phaseBTarget": 100,
+      "totalBets": 7700,
+      "pStep9Pass": 0.25533333333333336,
+      "pStep9PassSE": 0.011258721722061292,
+      "pWithin0_05pp": 0.08066666666666666,
+      "pWithin0_02pp": 0.017333333333333333,
+      "widthPP": {
+        "p05": 0.037865231979461456,
+        "p50": 0.1713380935284725,
+        "p95": 0.46141458354954645,
+        "max": 0.975309908282529,
+        "mean": 0.1980816059026586
+      },
+      "missedTrueEdge": 0
+    }
+  ],
+  "alternativeSplits": [
+    {
+      "edge": 0.001,
+      "phaseA": 5000,
+      "phaseB": 2000,
+      "phaseBTarget": 1.01,
+      "totalBets": 7700,
+      "pStep9Pass": 0.7833333333333333,
+      "pStep9PassSE": 0.01063711183301878,
+      "pWithin0_05pp": 0.4246666666666667,
+      "pWithin0_02pp": 0.11733333333333333,
+      "widthPP": {
+        "p05": 0.011932736882247497,
+        "p50": 0.05726477985206202,
+        "p95": 0.16448160052637828,
+        "max": 0.3405448554474333,
+        "mean": 0.06913047001542448
+      },
+      "missedTrueEdge": 0
+    },
+    {
+      "edge": 0.001,
+      "phaseA": 4000,
+      "phaseB": 3000,
+      "phaseBTarget": 1.01,
+      "totalBets": 7700,
+      "pStep9Pass": 0.8873333333333333,
+      "pStep9PassSE": 0.008163858927773838,
+      "pWithin0_05pp": 0.5753333333333334,
+      "pWithin0_02pp": 0.17733333333333334,
+      "widthPP": {
+        "p05": 0.009287940512037185,
+        "p50": 0.04385490933349612,
+        "p95": 0.1224335415459854,
+        "max": 0.29855486573059364,
+        "mean": 0.052534297439438944
+      },
+      "missedTrueEdge": 0
+    },
+    {
+      "edge": 0.001,
+      "phaseA": 3500,
+      "phaseB": 3500,
+      "phaseBTarget": 1.01,
+      "totalBets": 7700,
+      "pStep9Pass": 0.9293333333333333,
+      "pStep9PassSE": 0.006616791210694646,
+      "pWithin0_05pp": 0.632,
+      "pWithin0_02pp": 0.23,
+      "widthPP": {
+        "p05": 0.007925048652757116,
+        "p50": 0.03941393530747517,
+        "p95": 0.11111679931918861,
+        "max": 0.25668658181491333,
+        "mean": 0.04636931310925092
+      },
+      "missedTrueEdge": 0
+    },
+    {
+      "edge": 0.001,
+      "phaseA": 3000,
+      "phaseB": 4000,
+      "phaseBTarget": 1.01,
+      "totalBets": 7700,
+      "pStep9Pass": 0.9473333333333334,
+      "pStep9PassSE": 0.005767315313551524,
+      "pWithin0_05pp": 0.688,
+      "pWithin0_02pp": 0.23933333333333334,
+      "widthPP": {
+        "p05": 0.006916770358256219,
+        "p50": 0.03517804105802602,
+        "p95": 0.10292749582092586,
+        "max": 0.21495933353474772,
+        "mean": 0.042880490059298976
+      },
+      "missedTrueEdge": 0
+    },
+    {
+      "edge": 0.001,
+      "phaseA": 2000,
+      "phaseB": 5000,
+      "phaseBTarget": 1.01,
+      "totalBets": 7700,
+      "pStep9Pass": 0.976,
+      "pStep9PassSE": 0.0039517084912731116,
+      "pWithin0_05pp": 0.7566666666666667,
+      "pWithin0_02pp": 0.31733333333333336,
+      "widthPP": {
+        "p05": 0.007212796718880643,
+        "p50": 0.030335729359298735,
+        "p95": 0.0856191183464472,
+        "max": 0.17804598850359454,
+        "mean": 0.03641400299606366
+      },
+      "missedTrueEdge": 0
+    }
+  ],
+  "note": "Bracket width is Gamma(2, T/n): the mean falls as T/n but the tail is heavy, so a plan can be tight on average and still miss the Step 9 threshold on a large minority of runs. Phases A and B share a $0.01 stake, so reallocating between them changes precision at identical cost. Fresh entropy each run — figures move slightly between runs."
+}

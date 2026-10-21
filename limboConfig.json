@@ -1,0 +1,16 @@
+{
+  "_source": "GET https://duel.com/api/v2/limbo/config",
+  "_captured_at": "2026-08-21",
+  "_note": "Operator-provided game configuration, recorded verbatim from the live endpoint (read-only, logged out, no bets placed). The scaling_edge block is the reason this audit cannot state a single flat house edge: see the Scaling Edge chapter.",
+  "success": true,
+  "data": {
+    "max_target": "100000.00",
+    "scaling_edge": {
+      "enabled": true,
+      "bankroll": "25000000",
+      "max_edge": "0.01",
+      "min_edge": "0.001",
+      "max_loss_fraction": "0.12"
+    }
+  }
+}

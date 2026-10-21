@@ -1,0 +1,68 @@
+{
+  "auditId": "PF-2026-DL11",
+  "game": "limbo",
+  "casino": "duel",
+  "release": "v1.2.0",
+  "framework": "1.1",
+  "simulation": {
+    "seeding": "pinned",
+    "seedSource": "src/simulate.ts SIM_MASTER_SEED (every server/client seed derived by SHA-256)",
+    "attestation": "npm run simulate regenerates outputs/simulation-results.json and rtp-convergence.html byte-for-byte from the pinned seeds (MANIFEST.md); Step 18 re-derives every Pass 1 statistic from the stored census on every npm test, Pass 2 (Step 19) is recomputed from the dataset, and npm test field-diffs its run against the committed artifacts"
+  },
+  "runtime": {
+    "command": "npm test",
+    "measured": [
+      {
+        "date": "2026-09-28",
+        "machine": "Apple M2 Max",
+        "cores": 12,
+        "node": "22.23.1",
+        "wallSeconds": 32.5,
+        "by": "/usr/bin/time -p npm test (other audit runs sharing the machine)"
+      }
+    ]
+  },
+  "datasetSha256": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+  "artifacts": {
+    "data/limbo-master.json": "b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+    "limboConfig.json": "676beff74f5a3c2e9d634a49e994acfc5adc0aa1a19fdc1ee4be36a916b07379",
+    "outputs/simulation-results.json": "1ab73639811451f4a75212f83fde7651fbe9bb3e974473523c2be70ed789d2ae",
+    "outputs/chi-squared-results.json": "e2d83a46b05f3aa6ff0cb2f4b60f9a86b9a269b6387537a511bcab62a89048a7",
+    "outputs/determinism-log.json": "cc52b48e1bb1bc37a962b7fd90d19e7671f593cf8659637591b9c9579b581c6c",
+    "outputs/capture-power.json": "4aa3c304278706fb6628442fe5727416431e5457809f359770d53597f6d6a5ef",
+    "outputs/rtp-convergence.html": "203df3b6da90d6902ab2c9f12a2a9702033beb698555860ee0d9cfb5ed2d1ac9",
+    "outputs/verification-results.json": "30a0bf1383a4b09f5aca4774d38d68b63864b17749ac3c991686b9b5de606d5c",
+    "outputs/rtp-claim-table.json": "e26e7b2bfbf41985e18cf8cc21c34db8d220eb1f48892a5f366e79f7c9ab939b",
+    "evidence/E12-limbo-config-2026-10-05.json": "ce36245867f930f5587e4ca71d4e2ace5c082dd660c4c6574c888f8fa162eb18",
+    "evidence/E12-limbo-config-2026-10-05.json.meta.json": "b27f4a9588b68d8e4d01b2a7b443ed2e23ad77f17df3dad9c149adebb8ad5136"
+  },
+  "verdict": "PROVABLY FAIR — Full Pass",
+  "scored": {
+    "passed": 30,
+    "flags": 0,
+    "operatorFlags": 0,
+    "captureFlags": 0,
+    "hardFail": 0,
+    "of": 30
+  },
+  "capturedAt": {
+    "from": "2026-08-31T17:29:28.972Z",
+    "to": "2026-08-31T19:47:10.842Z"
+  },
+  "environment": {
+    "host": "duel.com",
+    "stage": "production",
+    "qualifier": null
+  },
+  "supersedes": "v1.0.0",
+  "signature": "SHA256:gEujiJm2pRyq7lQsfYQfQ1r97H/J7GdaKHbOW8GtikY",
+  "falsifiability": {
+    "registry": "tests/mutations.json",
+    "runner": "scripts/mutate.mjs",
+    "mutations": 46,
+    "killed": 46,
+    "declaredSurvivors": 0,
+    "source": "npm run mutate 2026-10-20 (Apple M2 Max, 12 cores, node 22.23.1), the whole registry (46 entries; M05b, M05g, M09c, M22, M23 retargeted to the clean-room src/rng.ts) in one run (baseline green) on the clean-room tree: \"46/46 mutations killed\", \"30/30 scored steps have a mutation that kills them\""
+  },
+  "pending": ""
+}

@@ -1,0 +1,596 @@
+{
+  "auditId": "PF-2026-DL11",
+  "totalBets": 7700,
+  "totalSeeds": 158,
+  "measuredEdge": {
+    "lower": 0.0007308447855897127,
+    "upper": 0.0011828081173432814,
+    "point": 0.000956826451466497,
+    "witnesses": 7700,
+    "bracketed": true
+  },
+  "steps": [
+    {
+      "step": 1,
+      "name": "Commit-Reveal Integrity (SHA-256 over hex bytes)",
+      "status": "PASS",
+      "detail": "157/157 revealed plaintexts (src/capture-plan.ts EXPECTED_REVEALED); 157 open a commitment published at an EARLIER seed record (154 the immediately preceding one; 3 repeat the plaintext of the record before — the phase-boundary double rotation); 154/154 betting epochs opened (EXPECTED_EPOCHS); 4 commitment(s) never opened (expected 4, the bet-less phase-boundary epochs and the final active seed), 0 of them carrying bets",
+      "profileIds": [
+        "LIMBO-01"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-01",
+          "coverage": "full",
+          "note": "every revealed plaintext must open a commitment published at an EARLIER record (the former any-commitment match is gone); 157 reveals, 154 betting epochs and 4 bet-less unopened records bound to src/capture-plan.ts; zero unverifiable bets with Steps 3–4"
+        }
+      ]
+    },
+    {
+      "step": 2,
+      "name": "Forward Commitment (next server seed hash honoured)",
+      "status": "PASS",
+      "detail": "158/158 promotions recomputed from operator fields (previousNextHash === newActiveHash === the record's serverSeedHashed) over 158 seed records; chain adjacency 157/157 (nextServerSeedHash === next record's serverSeedHashed); pre-capture anchor: record 0 is the capture-start rotation whose promoted hash 6da4c8020d77… is the commitment epoch 0 settles against",
+      "profileIds": [
+        "LIMBO-02"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-02",
+          "coverage": "full",
+          "note": "promotion records and chain adjacency recomputed from operator fields on all 158 records; record 0 is the capture-start rotation that anchors epoch 0"
+        }
+      ]
+    },
+    {
+      "step": 3,
+      "name": "Seed Coverage & Epoch Binding (every epoch revealed, one commitment and one client seed per rotation window)",
+      "status": "PASS",
+      "detail": "7700/7700 bets sit in the rotation window of the record whose commitment AND client seed they carry (0 wrong hash, 0 wrong client seed, 0 outside every window); 154/154 betting epochs, 0 not of size 50; 154/154 revealed",
+      "profileIds": [
+        "LIMBO-03",
+        "LIMBO-01"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-03",
+          "coverage": "full",
+          "note": "no longer the group-by-hash tautology: every bet is placed in the rotation window of the seed record active when it was placed and must carry that record's commitment AND client seed; epochs bound to EXPECTED_EPOCHS × EPOCH_SIZE"
+        },
+        {
+          "id": "LIMBO-01",
+          "coverage": "full",
+          "note": "epoch-coverage half: 154/154 betting epochs revealed"
+        }
+      ]
+    },
+    {
+      "step": 4,
+      "name": "Dataset Verifiability (100% of bets)",
+      "status": "PASS",
+      "detail": "7700/7700 bets (EXPECTED_BETS, src/capture-plan.ts) sit under a revealed server seed; dataset carries 7700",
+      "profileIds": [
+        "LIMBO-01"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-01",
+          "coverage": "full",
+          "note": "verifiable-bet half: EXPECTED_BETS under a revealed seed"
+        }
+      ]
+    },
+    {
+      "step": 5,
+      "name": "Result Determinism (exact equality, no tolerance)",
+      "status": "PASS",
+      "detail": "7700/7700 bets (EXPECTED_BETS) recomputed from revealed seeds and compared as integer 6-dp units parsed from the served string (the float path, multiplier.toFixed(6), must land on the same unit): 0 mismatches, 0 skipped (no revealed seed), 0 served results not on the 6-dp grid. Second check, operator-code parity (LIMBO-09; src/rng.ts is rebuilt from docs/ALGORITHM.md, not from this code): Duel's own Limbo Verify-tab code (evidence/verify-tab/duel-verify-tab-limbo-2026-09-26.js, pasted by Paulo from duel.com Verify tab 2026-09-26 (duel.com → Provably Fair → Verify, game Limbo, code panel), SHA-256 be69447465682f2b…, pinned) executed with only its four \"User input values\" filled in on 7700/7700 bets — its roll equals the served result and src/rng.ts as integer 6-dp units on every bet (0 / 0 differ), what it printed equals what it returned on 7700/7700. Its afterEdge at the edge the package declares per bet (houseEdge = the limboConfig.json floor 0.001 on 7700/7700 bets, as Step 20 measures): win iff afterEdge >= target agrees with the served win flag on 7700/7700 and with the package's exact rule result >= target/(1−1/1000) on 7700/7700 (reported, not scored). The file's own comment, printed when houseEdge is 0: \"the real round multiplier changes with the size of the bet and the scaling edge applied\"",
+      "profileIds": [
+        "LIMBO-07"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-07",
+          "coverage": "full",
+          "note": "exact integer 1e-6 units parsed from the served string, float path (src/rng.ts multiplier, toFixed(6)) must land on the same unit; coverage bound to EXPECTED_BETS; a skipped bet FAILs"
+        }
+      ]
+    },
+    {
+      "step": 6,
+      "name": "Negative Control (tampered nonce must break reproduction)",
+      "status": "PASS",
+      "detail": "bet 4077531: nonce+1 changes the recomputed result (true); the Step 5 comparison accepts the served 2.221402 and rejects it one 6-dp unit either side (true) — Step 5 is falsifiable",
+      "profileIds": [
+        "LIMBO-18"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-18",
+          "coverage": "full",
+          "note": "negative-control half: nonce+1 changes the result and a served result ±1e-6 is rejected; the exact-count half is Step 25"
+        }
+      ]
+    },
+    {
+      "step": 7,
+      "name": "Nonce Continuity (no gaps or repeats within an epoch)",
+      "status": "PASS",
+      "detail": "154/154 epochs carry exactly nonces 0..49 (declared base NONCE_BASE, size EPOCH_SIZE — src/capture-plan.ts, not the dataset); 0 epoch(s) with an undeclared gap, repeat or out-of-range nonce (operator-side, FAIL); 0 with a gap declared as an auditor-side retry (0 declared; capture-origin FLAG)",
+      "profileIds": [
+        "LIMBO-04"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-04",
+          "coverage": "full",
+          "note": "nonces exactly NONCE_BASE..NONCE_BASE+EPOCH_SIZE−1 from src/capture-plan.ts; an undeclared gap/repeat FAILs; a gap declared in CAPTURE_RETRY_GAPS is a capture-origin FLAG (verdict-neutral) — the branch is reachable (probe) though the capture has none"
+        }
+      ]
+    },
+    {
+      "step": 8,
+      "name": "Payout Math (stake x target, exact on the money grid)",
+      "status": "PASS",
+      "detail": "7700/7700 bets compared as integers on the 1e-20 grid (18-dp amounts × 2-dp targets, parsed from the served strings): 2965 wins paid exactly amount × target, losses exactly 0 — 0 payout errors; 0 bets whose 18-dp multiplier echo differs from the target; 0 whose requested and served target differ; 0 unparsable",
+      "profileIds": [
+        "LIMBO-11",
+        "LIMBO-13"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-11",
+          "coverage": "full",
+          "note": "amount_won == amount × target compared as integers on the 1e-20 grid from the served strings; losses exactly 0"
+        },
+        {
+          "id": "LIMBO-13",
+          "coverage": "full",
+          "note": "paid-multiplier half: the 18-dp multiplier echo and the served target must equal the chosen target exactly"
+        }
+      ]
+    },
+    {
+      "step": 9,
+      "name": "House Edge Measured from Win/Lose Boundary",
+      "status": "PASS",
+      "detail": "edge bracketed to (0.00073084, 0.00118281] from 7700 bets -> 0.0957% (width 0.045196 pp, tight threshold 0.1 pp). Tightest loss: bet 4100195 (T=2.9, R=2.902121); tightest win: bet 4085383 (T=91.95, R=92.058888)",
+      "profileIds": [
+        "LIMBO-19"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-19",
+          "coverage": "full",
+          "note": "measured-edge half: the backend edge bracket from the win/lose boundary, width printed; the per-target enumeration against the claim is Step 26"
+        }
+      ]
+    },
+    {
+      "step": 10,
+      "name": "Win Condition (result >= target / (1 - measured edge))",
+      "status": "PASS",
+      "detail": "7700 settlements reproduced from the measured edge; 0 disagreements",
+      "profileIds": [
+        "LIMBO-10"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-10",
+          "coverage": "full",
+          "note": "settlement half at the MEASURED edge; the declared-edge exact rule and the result range are Step 24"
+        }
+      ]
+    },
+    {
+      "step": 11,
+      "name": "Operator-Reported Edge Cross-Check (distribution edge)",
+      "status": "PASS",
+      "detail": "operator reports house_edge_percentage 0.1000%; measured bracket (0.073084%, 0.118281%] — consistent. The operator also reports effective_edge 0.1 — recorded, not scored here, and not interpreted: whether it differs from the distribution edge is settled by the wallet reconciliation, not by this step.",
+      "profileIds": [
+        "LIMBO-13"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-13",
+          "coverage": "full",
+          "note": "the operator-reported house_edge_percentage is compared with the measured bracket, never read"
+        }
+      ]
+    },
+    {
+      "step": 12,
+      "name": "Reported Win Chance Consistent with Measured Edge Bracket",
+      "status": "PASS",
+      "detail": "7700 bets checked against [(1-upper)/T, (1-lower)/T]; 0 outside the admissible band",
+      "profileIds": [
+        "LIMBO-13"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-13",
+          "coverage": "full",
+          "note": "the operator-reported win_chance is compared with the measured bracket, never read; the exact comparison with (1−e)/T is Step 25"
+        }
+      ]
+    },
+    {
+      "step": 13,
+      "name": "Dataset Integrity (pinned SHA-256)",
+      "status": "PASS",
+      "detail": "dataset matches the pinned hash b2db8685eeafde731152bd9770bf4df9872bda626b65b3412e29b067871365cc",
+      "profileIds": [
+        "LIMBO-26"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-26",
+          "coverage": "full"
+        }
+      ]
+    },
+    {
+      "step": 14,
+      "name": "Population & Phase Structure (capture plan honoured)",
+      "status": "PASS",
+      "detail": "A 5000/5000, B 2000/2000, C 200/200, D 500/500; 0 bets in an undeclared phase; total 7700/7700; seed records 158/158; betting epochs 154/154, 0 not of size 50 (EXPECTED_EPOCHS × EPOCH_SIZE = 7700 vs EXPECTED_BETS 7700; dataset meta counts are not the denominator)",
+      "profileIds": [
+        "LIMBO-05"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-05",
+          "coverage": "full",
+          "note": "bets, seeds, epochs, epoch size and per-phase counts bound to src/capture-plan.ts; no undeclared phase; meta counts not the denominator"
+        }
+      ]
+    },
+    {
+      "step": 15,
+      "name": "Target Coverage (spread of chosen multipliers)",
+      "status": "PASS",
+      "detail": "4094 distinct targets from 1.01 to 998.37 (floor MIN_DISTINCT_TARGETS = 10)",
+      "profileIds": [
+        "LIMBO-15"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-15",
+          "coverage": "full",
+          "note": "distinct-target spread; the per-decade assertion against the plan is Step 28"
+        }
+      ]
+    },
+    {
+      "step": 16,
+      "name": "Bet-Size Invariance (edge independent of stake)",
+      "status": "PASS",
+      "detail": "small-stake bracket (0.00073084, 0.00118281] width 0.0452 pp vs high-stake bracket (-0.00079568, 0.00206602] width 0.2862 pp — overlapping, consistent with a single stake-independent edge. Detects only a difference larger than ~0.29 pp (200 high-stake bets) — so the price is also checked DIRECTLY: 200/200 Phase C bets at $10 carry exactly the win_chance served to base-stake bets at the same target (0 mispriced, 0 with no base-stake comparator, 0 not at the planned stake), every one recomputes (Step 5) and pays exactly amount × target (Step 8); 198 elevated-stake wins (floor 100).",
+      "profileIds": [
+        "LIMBO-12"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-12",
+          "coverage": "full",
+          "note": "every Phase C bet carries exactly the base-stake win_chance at its target, recomputes (Step 5) and pays exactly (Step 8); 198 elevated-stake wins ≥ 100; plus the bracket overlap"
+        }
+      ]
+    },
+    {
+      "step": 17,
+      "name": "Client-Seed Variation (player-supplied entropy)",
+      "status": "PASS",
+      "detail": "500/500 Phase D bets under 10/10 auditor-set client seeds (one per 50-bet epoch, floor 2), each recomputed exactly in Step 5; 154 distinct client seeds in the dataset. DISCLOSED (capture-origin): 10 of the 10 Phase D seeds are 'pfaudit' + a base-36 timestamp (predictable), exposing 10 epochs; the 144 Phase A–C epochs used Math.random() seeds (not a CSPRNG). Each was set at a rotation after the capture had recorded its server-seed commitment as the outstanding next-seed hash; that order rests on the capture's records (capture integrity assumed, MANIFEST DL-4), and Step 2's hash equality is a consistency check, not timing.",
+      "profileIds": [
+        "LIMBO-06"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-06",
+          "coverage": "partial",
+          "note": "CAPTURE-ORIGIN (decision-13, disclosed, never held against the operator): the profile requires the A–C client-seed generator to be a CSPRNG; the rig used Math.random() (capture/capture-auto.reference.js:375-378, MANIFEST DL-2) and the Phase D seeds are predictable pfaudit+timestamp strings (DL-3, 10 epochs enumerated by Step 17). Only a new capture could change the generator; everything else LIMBO-06 asserts is implemented (wrong-seed model-rate gate + empty-seed control in Step 22, Phase D recompute in Steps 5/17)"
+        }
+      ]
+    },
+    {
+      "step": 18,
+      "name": "Simulation Pass-1 (pinned seeds: draw uniformity + exact-RTP convergence)",
+      "status": "PASS",
+      "detail": "pinned seeds (SIM_MASTER_SEED \"duel-limbo-pass1-2026-09-26\"), every statistic re-derived here from the artifact's census: draw uniformity 2,000,000 uint32 draws in 1000 equal bins — chi2 986.69 (df 999), p 0.6031; lag-1 serial z -0.844; RTP at 13 targets × 1,000,000 rounds against the EXACT win probability W(t)/2^32 (src/exact.ts, declared edge 1/1000): worst |z| 1.56 at 100x, 0 beyond the family-wise critical value 3.403 (α 0.01 over 15 tests, Bonferroni). 1.1x RTP 0.99921 vs exact 0.998999 (z 0.65); 1.25x RTP 0.99850 vs exact 0.998999 (z -1.00); 1.5x RTP 0.99966 vs exact 0.999000 (z 0.93); 2x RTP 0.99900 vs exact 0.999000 (z 0.00); 3x RTP 0.99922 vs exact 0.999000 (z 0.16); 5x RTP 0.99966 vs exact 0.999000 (z 0.33); 10x RTP 1.00064 vs exact 0.999000 (z 0.55); 25x RTP 0.99735 vs exact 0.999000 (z -0.34); 50x RTP 1.00515 vs exact 0.999000 (z 0.88); 100x RTP 1.01450 vs exact 0.999000 (z 1.56); 1000x RTP 0.97500 vs exact 0.999000 (z -0.76); 10000x RTP 1.02000 vs exact 0.998999 (z 0.21); 100000x RTP 1.10000 vs exact 0.998983 (z 0.32)",
+      "profileIds": [
+        "LIMBO-20"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-20",
+          "coverage": "full",
+          "note": "pinned seeds (SIM_MASTER_SEED), 2,000,000-draw uniformity chi-squared + lag-1 serial, 13 targets 1.1x–100,000x × 1,000,000 rounds against the EXACT per-target win probability, family-wise Bonferroni; all re-derived in verify from the stored census; regeneration byte-identical and field-diffed by test:full"
+        }
+      ]
+    },
+    {
+      "step": 19,
+      "name": "Simulation Pass-2 (cherry-pick screen, 10,000 nonces per revealed seed)",
+      "status": "PASS",
+      "detail": "154/154 revealed betting epochs × 10,000 nonces (1,540,000 results, each window betting the targets the casino served in that epoch, declared edge 1/1000); window 0 replays the 50 captured results: 0 mismatches. Exact permutation null (window 0 exchangeable with the other 199): rank-sum Z = 0.453 (one-sided p = 0.6748; pre-registered rule: cherry-pick indicated at Z < -3.090, α 0.001). Direction split: captured window below its epoch median in 71 epochs, above in 83. Captured-window return 7324.67 vs expectation 7692.30 (unit stakes). Power: detects with ≥ 50% probability a cherry-pick that puts ≥ 15.5% of epochs' captured windows in their worst decile",
+      "profileIds": [
+        "LIMBO-21"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-21",
+          "coverage": "full",
+          "note": "every revealed seed × 10,000 nonces computed in verify; windows bet the served targets; captured window vs the 199 others under an exact permutation null; pre-registered one-sided rule; direction split and detection power printed"
+        }
+      ]
+    },
+    {
+      "step": 20,
+      "name": "Scaling Edge (bet-size dependence)",
+      "status": "PASS",
+      "detail": "7700/7700 bets, edge RECOMPUTED per bet from target x win_chance (exact, no sampling error): observed 0.100000%–0.100000% against a declared floor of 0.1000% and ceiling of 1.0000%. Largest stake 10, largest potential profit (stake x (target − 1)) 12.47 vs 25,000 = bankroll x min_edge, where the rule implied by the config (limboConfig.json, captured 2026-08-21) lifts the edge off the floor (2,005x headroom); the 1% ceiling is reached at bankroll x max_edge = 250,000, which is also the largest profit a bet can carry, and max_loss_fraction x bankroll = 3,000,000 never binds. The capture never approaches the scaling onset, so these readings characterise the FLOOR only and say nothing about the edge above it. Config: enabled=true, bankroll 25,000,000, max_loss_fraction 0.12.",
+      "profileIds": [
+        "LIMBO-31"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-31",
+          "coverage": "full",
+          "note": "config pinned (Step 21); every bet's applied edge recovered exactly from target × win_chance, off-floor FAILs; scaling onset (25,000 potential profit, limboConfig.json of 2026-08-21) stated and not reached; the floor→ceiling rule is disclosed as config-implied"
+        }
+      ]
+    },
+    {
+      "step": 21,
+      "name": "Artifact Integrity (pinned artifacts of record)",
+      "status": "PASS",
+      "detail": "5 artifact(s) of record + the operator config checked against their pins, JSON artifacts checked free of run metadata: chi-squared-results.json matches its pin; determinism-log.json matches its pin; capture-power.json matches its pin; rtp-convergence.html matches its pin; simulation-results.json matches its pin; limboConfig.json matches its pin; value domains: 1346 numeric leaves across 4 artifacts, all covered by a rule in src/domains.ts and inside it",
+      "profileIds": [
+        "LIMBO-27"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-27",
+          "coverage": "full",
+          "note": "every artifact of record + limboConfig.json pinned in src/, no run metadata (asserted), value domains on every numeric leaf (src/domains.ts, both directions), verify writes only outputs/run/"
+        }
+      ]
+    },
+    {
+      "step": 22,
+      "name": "Client-Seed Influence (model-rate gate + empty-seed control)",
+      "status": "PASS",
+      "detail": "7700/7700 bets recomputed under a wrong client seed: 0 kept the same result against the exact lattice rate E = Σ drawsWithUnits(k)/2^32 = 2.549e-3, bound E + 5σ + 1 = 1.255; empty-seed control (clientSeed = \"\") over 7700/7700: 0 collision(s), bound 1.255",
+      "profileIds": [
+        "LIMBO-06"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-06",
+          "coverage": "partial",
+          "note": "CAPTURE-ORIGIN (decision-13, disclosed, never held against the operator): the profile requires the A–C client-seed generator to be a CSPRNG; the rig used Math.random() (capture/capture-auto.reference.js:375-378, MANIFEST DL-2) and the Phase D seeds are predictable pfaudit+timestamp strings (DL-3, 10 epochs enumerated by Step 17). Only a new capture could change the generator; everything else LIMBO-06 asserts is implemented (wrong-seed model-rate gate + empty-seed control in Step 22, Phase D recompute in Steps 5/17)"
+        }
+      ]
+    },
+    {
+      "step": 23,
+      "name": "Draw Domain & Bias Bound (uint32, no range reduction)",
+      "status": "PASS",
+      "detail": "draw = first 8 hex chars of HMAC-SHA256 = 32 bits; denominator MAX_U32 = 4294967296 (= 2^32); no modulo, no rejection: bias bound = 0 (each of the 2^32 values is one equiprobable input). 7700/7700 recomputed draws lie in [0, 2^32). Result map K(u) = floor(2^32·1e6/u) non-increasing on 103 probe points: true; K(2^32) = 1000000 units (the 1.000000 floor is reached by exactly one draw, so the max(1.0, …) clamp never changes a result)",
+      "profileIds": [
+        "LIMBO-08"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-08",
+          "coverage": "full",
+          "note": "uint32 taken directly (8 hex chars, denominator 2^32), no modulo or rejection: bias bound 0 by construction, asserted from src/rng.ts constants and every recomputed draw"
+        }
+      ]
+    },
+    {
+      "step": 24,
+      "name": "Result Range & Win Rule at the Declared Edge (exact, with boundary census)",
+      "status": "PASS",
+      "detail": "7700/7700 served results on the 6-dp lattice within [1.000000, 4294967296] (the formula's own maximum; no cap below it); 7700/7700 served win flags equal the published rule result >= target/(1−e) evaluated exactly at the declared e = 1/1000 (k·999 >= t·1000·10^4, integer units, no served field read). Boundary census: 0 result(s) exactly ON the threshold (tie UNWITNESSED in the capture — the >= comparator rests on Duel's published comment); 0 result(s) at the 1.000000 floor (probability 2^-32 per bet; UNWITNESSED), which loses at every legal target (1.000000 < threshold at 1.01: true); tightest win 1079 unit(s) above its threshold, tightest loss 782 unit(s) below",
+      "profileIds": [
+        "LIMBO-10",
+        "LIMBO-17"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-10",
+          "coverage": "full",
+          "note": "result range [1.000000, 2^32] on the 6-dp lattice and every served win flag equal to the exact rule at the declared edge, no served field read"
+        },
+        {
+          "id": "LIMBO-17",
+          "coverage": "partial",
+          "note": "the boundary census is printed but the TIE (result exactly on the threshold) and the 1.000000 FLOOR are unwitnessed in the capture (0 of each in 7,700; the floor has probability 2^-32 per bet) and no operator-verifier probe exists; the >= comparator rests on Duel's published comment (MANIFEST DL-1). The floor losing at every legal target is proved by arithmetic"
+        }
+      ]
+    },
+    {
+      "step": 25,
+      "name": "Win Probability per Served Target (exact count over 2^32 draws)",
+      "status": "PASS",
+      "detail": "4094 distinct served targets: winning draws W(t) COUNTED over the src/rng.ts result formula at e = 1/1000; 4094/4094 within the truncation bound of the closed form (1−e)/T (worst 0.997 of its bound, at 2x). Operator's served win_chance vs (1−e)/T: 7700/7700 bets equal to within one 1e-18 unit (compared, never read)",
+      "profileIds": [
+        "LIMBO-18",
+        "LIMBO-13"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-18",
+          "coverage": "full",
+          "note": "exact-count half: winning draws counted over all 2^32 under the operator's formula for every served target, against the closed form within the truncation bound"
+        },
+        {
+          "id": "LIMBO-13",
+          "coverage": "full",
+          "note": "the served win_chance equals (1−e)/T to one 1e-18 unit on every bet (compared, never read)"
+        }
+      ]
+    },
+    {
+      "step": 26,
+      "name": "Effective Edge on Every Legal Target vs Claim (exact enumeration)",
+      "status": "PASS",
+      "detail": "9,999,900 legal targets 1.01x … 100000x (max_target, limboConfig.json), each edge = 1 − T·W(t)/2^32 from an exact count at the declared floor edge e = 1/1000: min 0.1000000% at 36099.45x, max 0.1023269% at 99945.78x; 0 target(s) below the claim; 0 outside the claim at its printed precision (0.1%). The backend's T/(1−e) arithmetic is unpublished: the double reading and the exact-rational reading give a different winning set on 0 target(s). Measured beside the claim (Step 9): (0.0730845%, 0.1182808%] from 7700 bets. Scope: the floor edge; under the rule implied by the config captured 2026-08-21, a bet whose potential profit passes bankroll × min_edge = 25,000 would be priced higher (Step 20)",
+      "profileIds": [
+        "LIMBO-19"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-19",
+          "coverage": "full",
+          "note": "every one of the 9,999,900 legal targets priced by an exact count; min/max edge and where printed; compared with the claim at its printed precision (0.1%, R1-style reading: no target changes the published figure at its printed precision, so no FLAG) — every target differs from 0.1% by at most +0.0023269 pp and none is below it; the measured bracket printed beside the claim"
+        }
+      ]
+    },
+    {
+      "step": 27,
+      "name": "Target Bounds & Maximum Payout",
+      "status": "PASS",
+      "detail": "7700/7700 targets on the 2-dp grid, 7700/7700 within [1.01, 100000] (max_target, limboConfig.json); result cap: none below the formula maximum 2^32; largest potential profit in the capture 12.4671 (stake × (target − 1)) vs the maximum profit bankroll × max_edge = 250,000; the advertised maximum target is playable at the smallest captured stake (0.0125 × (100000 − 1) = 1,249.99 ≤ 250,000). The 250,000 maximum profit is implied by the config rule (limboConfig.json, captured 2026-08-21), not served as a field there. Not declared by the operator: the minimum legal target (1.01x is the smallest the capture placed)",
+      "profileIds": [
+        "LIMBO-14"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-14",
+          "coverage": "full",
+          "note": "every target on the 2-dp grid within [1.01, max_target]; the 250,000 maximum profit (limboConfig.json of 2026-08-21) and advertised-max playability printed; the maximum profit disclosed as implied by the config rule, not served as a field there; minimum legal target disclosed"
+        }
+      ]
+    },
+    {
+      "step": 28,
+      "name": "Phase A Target Coverage by Decade (against the plan in code)",
+      "status": "PASS",
+      "detail": "Phase A 5000/5000 bets, 3787 distinct targets; per declared decade (src/capture-plan.ts PHASE_A_DECADES, from TARGET_RANGE): [1,10) 1662, [10,100) 1693, [100,1000] 1645 (floor 50 each); minimum target 1.01x placed: true. Targets above 1000x up to max_target are not captured; their pricing is covered by enumeration (Step 26), not by play",
+      "profileIds": [
+        "LIMBO-15"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-15",
+          "coverage": "full",
+          "note": "Phase A per declared decade (PHASE_A_DECADES from TARGET_RANGE) ≥ 50, minimum target placed, asserted against the plan in code"
+        }
+      ]
+    },
+    {
+      "step": 29,
+      "name": "Wallet Envelopes (ledger legs and rakeback, exact)",
+      "status": "PASS",
+      "detail": "163/163 sampled envelopes (phases ABCD): 227/227 ledger legs move the balance by exactly their delta (6-dp coins); 163/163 debit exactly −amount; 163/163 carry a credit leg iff the bet won, equal to amount_won exactly; 163/163 Zero Edge rakebacks equal exactly 0.001 × amount. Not asserted: consecutive-bet balance continuity (the sample is not consecutive)",
+      "profileIds": [
+        "LIMBO-16"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-16",
+          "coverage": "partial",
+          "note": "the capture carries a balance field only on 163 SAMPLED wallet envelopes: each leg's balance moves by exactly its delta, debit = −amount, credit = amount_won iff won, rakeback = 0.001 × amount — all exact; a consecutive-bet balance ledger was not captured (capture design), so the consecutive-delta half cannot be asserted"
+        }
+      ]
+    },
+    {
+      "step": 30,
+      "name": "Live-Sample Fit (informational)",
+      "status": "PASS",
+      "detail": "7700 captured results vs P(R >= x) = 1/x: KS D = 0.01199, p = 0.2172 (deviation reported below 0.01); lag-1 serial correlation of 1/R in capture order r1 = -0.00262, z = -0.230 (p = 0.8182; deviation reported at |z| >= 3). Informational: a sample of this size has little power; a deviation is reported, never counted as a flag, and never bears the verdict",
+      "profileIds": [
+        "LIMBO-22"
+      ],
+      "profileChecks": [
+        {
+          "id": "LIMBO-22",
+          "coverage": "full",
+          "note": "KS against P(R >= x) = 1/x and lag-1 serial on 1/R; informational (profile policy INFORMATIONAL, Mike 2026-09-29): a deviation is reported as INFO, never counted as a flag, never bears the verdict; reachable (mutation M30)"
+        }
+      ]
+    }
+  ],
+  "profileCoverage": {
+    "game": "limbo",
+    "profileVersion": "1.0.2",
+    "notApplicable": [],
+    "packageChecks": [
+      {
+        "id": "LIMBO-09",
+        "artifact": "docs/ALGORITHM.md + tests/limbo/RngSpecTests.ts + tests/limbo/OperatorSourceTests.ts + src/operator-verifier.ts + Step 5",
+        "coverage": "full",
+        "note": "REWRITTEN 2026-10-20 (v1.2.0 draft). src/rng.ts is rebuilt from a written specification, docs/ALGORITHM.md (framework games/limbo/ALGORITHM.md, commit 48f91a4), by an implementer who never opened Duel's code; Duel's published Verify-tab code is run as a second check, not used as the source. Through v1.1.0 src/rng.ts was a port of that code and cited 8 of its lines (OPERATOR_SOURCE_CITES); the port and the citation table are gone. Duel's own Limbo Verify-tab code, pasted by Paulo from duel.com Verify tab 2026-09-26, is vendored verbatim at evidence/verify-tab/duel-verify-tab-limbo-2026-09-26.js (E10, SHA-256 be694474…, never edited) and pinned with its runner in src/operator-verifier.ts. The asserts: (1) \"unit tests reproduce at least one captured bet … against the operator's published algorithm\" — tests/limbo/OperatorSourceTests.ts EXECUTES the pinned file with only its four \"User input values\" filled in on all 7,700 captured bets: its roll equals the served result and src/rng.ts as integer 6-dp units on 7,700/7,700; (2) \"fixed vectors\" — the first bet of each phase through the same file at houseEdge 0 (it then prints its scaling-edge note and afterEdge = roll = served), and tests/limbo/RngSpecTests.ts runs the spec's own vectors and properties against src/rng.ts (118/118); (3) \"the adapter cites the operator source line it ports\" — superseded for this package by the 20 Oct 2026 rule that RNG code is rebuilt from a written spec: nothing is ported, so no operator line is cited; docs/ALGORITHM.md §4 names the source of every step instead (Duel's public pages, the standard construction, or the 7,700 live rounds). Step 5 runs the same execution in the verifier and also reports its afterEdge at the per-bet declared edge (the limboConfig.json floor 0.001 on 7,700/7,700, Step 20): win iff afterEdge >= target agrees with the served win flag on 7,700/7,700 and with the package's exact rule on 7,700/7,700 (reported, not scored). FAIL probed: M05c (a line of the file changed AND re-pinned), M05d (file byte, no re-pin), M05e (runner byte, no re-pin), M05f (runner forged AND re-pinned). Not established: that the Verify button, or Duel's server, runs exactly this code"
+      },
+      {
+        "id": "LIMBO-23",
+        "artifact": "MANIFEST.md#verification-results",
+        "coverage": "full",
+        "note": "S5-1 … S5-8 between S5-MATRIX markers, each tied to a scored step (S5-5 Not tested — disclosed); supplementary S5-D1 and S5-S1"
+      },
+      {
+        "id": "LIMBO-24",
+        "artifact": "none",
+        "coverage": "none",
+        "note": "no ProvablyFair.org site verifier exists for Duel Limbo (qa-workspace/duel/docusaurus/src/components/VerifyBets/games has no limbo module, checked 2026-09-26); Duel publishes its own Verify page, so the check applies (MANIFEST DL-13)"
+      },
+      {
+        "id": "LIMBO-25",
+        "artifact": "MANIFEST.md#verify-a-bet",
+        "coverage": "full",
+        "note": "six ordered steps: where the seed is revealed, the fields, the exact commitment encoding, the result formula, the exact win rule at the floor edge, the payout — in the served field names"
+      },
+      {
+        "id": "LIMBO-28",
+        "artifact": "package.json + tests/verify.ts",
+        "coverage": "full",
+        "note": "npm test = mocha + verify (no simulate), verify writes only outputs/run/ and field-diffs against the committed results, test:full regenerates the simulation and diffs it, engines node 22.x; runtime pinned (engines node 22.x + .nvmrc 22); a real git clone of origin @ 6c85377 reproduced on Node 22.23.1 on 2026-09-27 (npm ci, npm test 11.4 s, test:full 28.7 s, all exit 0; 43 passing, 30/30 Full Pass, REPRODUCED; outputs/run/diff.json reproduced true, 0 beyond tolerance; outputs byte-identical, clone tree unmodified; MANIFEST.md#reproduce-the-audit); audit ID PF-2026-DL11 assigned (src/capture-plan.ts AUDIT_ID, emitted into the results; README.md and MANIFEST.md headers, both checked by scripts/release-manifest.mjs)"
+      },
+      {
+        "id": "LIMBO-29",
+        "artifact": "tests/mutations.json + scripts/mutate.mjs",
+        "coverage": "full",
+        "note": "step-named registry run in a disposable copy by npm run mutate; every scored step 1–30 has a killing mutation with an expect marker; includes re-pinned forgeries of the dataset (M01–M17, M25, M29), of the simulation census (M18, M18b), of run metadata (M21b), of the config (M27) and of Duel's Verify-tab code and its runner (M05c, M05f; added 2026-09-26 with M05d, M05e); M05g and M09c, which broke a src/rng.ts citation, were retargeted on 20 Oct 2026 to the rebuilt src/rng.ts (6-dp rounding, byte order) when the citation table was removed; no declared survivors"
+      },
+      {
+        "id": "LIMBO-30",
+        "artifact": "MANIFEST.md#limitations-and-trust + MANIFEST.md#evidence",
+        "coverage": "full",
+        "note": "MANIFEST carries the load-bearing premises table and the declared-limitations register DL-1 … DL-14 with magnitudes; MANIFEST Evidence numbers every exhibit E01–E10 and E12 (E11 unassigned) with its evidential role; no internal QA material ships"
+      }
+    ]
+  },
+  "info": [
+    {
+      "label": "Realised RTP over the capture",
+      "detail": "99.7664% over 7700 bets (2965 wins) — variance illustration, not RTP evidence"
+    },
+    {
+      "label": "Win count vs measured edge",
+      "detail": "observed 2965, expected 2943.46 — chi2 0.2551 (df 1), p 0.6135"
+    },
+    {
+      "label": "Serial dependence of the win/lose stream (phase-structured, not an RNG test)",
+      "detail": "lag-1 r 0.6215, z = r·√n 54.53; runs p 1.0000 — dominated by the phase blocks (B and C bet 1.01x); the RNG serial screen is Step 30 on 1/R"
+    },
+    {
+      "label": "Edge bracket by target band (target-independence evidence)",
+      "detail": "[1.01,1.02) n=2205: (0.0017%, 0.2066%]; [1.02,1.5) n=300: (0.0210%, 0.3769%]; [1.5,5) n=928: (0.0731%, 0.3515%]; [5,50) n=1899: (-0.7944%, 0.5974%]; [50,1000) n=2368: (0.0424%, 0.1183%] — every band contains the measured edge"
+    },
+    {
+      "label": "Fair-multiplier tail vs P(R >= x) = 1/x",
+      "detail": ">=2x: 3916 obs / 3850.0 exp, >=10x: 811 obs / 770.0 exp, >=100x: 76 obs / 77.0 exp, >=1000x: 6 obs / 7.7 exp"
+    }
+  ],
+  "summary": {
+    "passed": 30,
+    "flags": 0,
+    "operatorFlags": 0,
+    "captureFlags": 0,
+    "hardFail": 0,
+    "verdict": "PROVABLY FAIR — Full Pass"
+  }
+}
