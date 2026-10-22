@@ -1,6 +1,6 @@
 {
   "name": "duel-limbo-audit",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Provably fair audit — Duel.com Limbo",
   "scripts": {
     "test": "mocha && npm run verify",

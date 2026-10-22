@@ -1,6 +1,6 @@
 # Duel Limbo — Consolidated Audit Overview
 
-**Audit ID:** PF-2026-DL11 (single-sourced in `src/capture-plan.ts` AUDIT_ID) · **Auditor:** ProvablyFair.org · **Release:** `v1.2.0` · **Framework:** 1.1
+**Audit ID:** PF-2026-DL11 (single-sourced in `src/capture-plan.ts` AUDIT_ID) · **Auditor:** ProvablyFair.org · **Release:** `v1.2.1` · **Framework:** 1.1
 
 Built August 2026. Dataset captured on **31 August 2026** (17:29–19:47 UTC) on production `duel.com`. Publication: 21 October 2026, release `v1.2.0`, the first public release of this repository. Audit report: https://audit.provablyfair.org/casino/duel/games/limbo/overview. This overview consolidates the package documentation; the machine-readable release identity remains in [RELEASE-MANIFEST.json](RELEASE-MANIFEST.json).
 
@@ -348,6 +348,7 @@ What this audit does not establish.
 | `v1.0.0` | The original audit. | PROVABLY FAIR — Full Pass |
 | `v1.1.0` (never tagged) | Re-certification under Framework 1.1, October 2026, below. The dataset of record is unchanged. Its changes ship in v1.2.0. | unchanged |
 | `v1.2.0` | The RNG rebuilt from a written specification instead of ported from Duel's code; Duel's code kept as a second check. Below, "20 October 2026". A fresh release: one squashed commit starts its public repo ("21 October 2026" below). | unchanged |
+| `v1.2.1` | Errata: adds `.gitattributes` (`* -text`) so a Windows git clone keeps every file byte-identical; no audit content changed. | unchanged |
 
 ### v1.1.0 — what changed
 

@@ -1,6 +1,6 @@
 # Duel Limbo — Provably Fair Audit
 
-**Auditor:** [ProvablyFair.org](https://www.provablyfair.org) · **Audit ID:** PF-2026-DL11 · **Release:** `v1.2.0` · **Capture:** 31 August 2026
+**Auditor:** [ProvablyFair.org](https://www.provablyfair.org) · **Audit ID:** PF-2026-DL11 · **Release:** `v1.2.1` · **Capture:** 31 August 2026
 
 **Result: PROVABLY FAIR — Full Pass.** All 7,700 captured results reproduce from `(serverSeed, clientSeed, nonce)` with exact equality on the 6-dp lattice. The verifier reports 30 of 30 scored steps passing, 0 flags and 0 hard fails.
 
@@ -56,4 +56,4 @@ There are two documentation files: this README and [MANIFEST.md — consolidated
 - Evidence exhibits kept as files: [pre-flight record](evidence/preflight-2026-08-31.md) (E03), [2026-08-18 algorithm transcription](evidence/algorithm-transcription-2026-08-18.md) (E04), [Duel's Verify-tab code](evidence/verify-tab/duel-verify-tab-limbo-2026-09-26.js) (E10), [the duel.com config as fetched 2026-10-05 in a logged-in session (read-only GET)](evidence/E12-limbo-config-2026-10-05.json) (E12; the same values as the operator config above).
 - [Audit report](https://audit.provablyfair.org/casino/duel/games/limbo/overview) · [MIT license](LICENSE).
 
-This release is v1.2.0, the first public release of this repository. The consolidation of the documentation and the RNG rebuilt from a written specification (20 October 2026) are recorded in the [release history](MANIFEST.md#release-history).
+This release is v1.2.1, an errata release that adds `.gitattributes` to v1.2.0, the first public release of this repository. The consolidation of the documentation and the RNG rebuilt from a written specification (20 October 2026) are recorded in the [release history](MANIFEST.md#release-history).
