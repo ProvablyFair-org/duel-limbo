@@ -11,7 +11,7 @@
  * cited 8 of its lines (OPERATOR_SOURCE_CITES); the port and that citation table were removed on
  * 20 Oct 2026.
  *
- * PROVENANCE. Pasted by Paulo from duel.com → Provably Fair → Verify (Limbo) on 2026-09-26 and saved
+ * PROVENANCE. Pasted by ProvablyFair.org from duel.com → Provably Fair → Verify (Limbo) on 2026-09-26 and saved
  * verbatim as evidence/verify-tab/duel-verify-tab-limbo-2026-09-26.js (committed in 9333460; 2,763
  * bytes, 78 lines). The file is never edited. Until then the package carried only a TRANSCRIPTION of the
  * Verify-page function (evidence/algorithm-transcription-2026-08-18.md, 2026-08-18 recon; MANIFEST DL-10), which this file superseded as

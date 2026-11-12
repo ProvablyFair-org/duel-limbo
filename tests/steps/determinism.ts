@@ -47,7 +47,7 @@ export function run(ctx: VerifyContext): StepResult[] {
   // ── Step 5, operator leg: THE OPERATOR'S OWN Verify-tab code (LIMBO-09), a SECOND CHECK ──────────
   // src/rng.ts is rebuilt from the written spec docs/ALGORITHM.md, not from this code; Duel's file is
   // run here as an independent cross-check of that rebuild and of the served results, never as its source.
-  // Duel's Limbo code panel, pasted by Paulo from the Verify tab on 2026-09-26, is vendored verbatim
+  // Duel's Limbo code panel, pasted by ProvablyFair.org from the Verify tab on 2026-09-26, is vendored verbatim
   // under evidence/verify-tab/ and pinned in src/operator-verifier.ts. The pinned runner fills in the
   // file's four "User input values" (clientSeed, serverSeed, nonce, houseEdge) per bet and runs it,
   // as a player would. houseEdge is the edge the package already declares for that bet: Step 20

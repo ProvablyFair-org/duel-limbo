@@ -311,7 +311,7 @@ export function run(ctx: VerifyContext): StepResult[] {
   // ── Step 30: live-sample fit (informational) ────────────────────────────────────────────────────
   // The fair result has the law P(R >= x) = 1/x (x >= 1): KS on the captured results against
   // F(x) = 1 − 1/x, and lag-1 serial correlation of the uniform transform 1/R in capture order.
-  // A 7,700-bet sample has little power; the step is informational (profile policy INFORMATIONAL, Mike
+  // A 7,700-bet sample has little power; the step is informational (profile policy INFORMATIONAL, adopted
   // 2026-09-29): a deviation is reported as INFO, never counted as a flag, and never bears the verdict.
   {
     const rs = bets.map(b => Number(unitsFromDecimal(b.response.result, RESULT_DECIMALS)) / UNIT);

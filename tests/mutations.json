@@ -580,7 +580,7 @@
     "replace": "const ok = ks.pValue >= 0.5 && Math.abs(z) < 3;",
     "runner": "verify",
     "expect": "[INFO] Step 30 —",
-    "guard": "Step 30 can report a deviation (INFO: informational, never counted, verdict unchanged — profile policy INFORMATIONAL, Mike 2026-09-29); the run is rejected by the reproduction gate because the committed Step 30 record changes, and the marker proves Step 30 itself fired"
+    "guard": "Step 30 can report a deviation (INFO: informational, never counted, verdict unchanged — profile policy INFORMATIONAL, adopted 2026-09-29); the run is rejected by the reproduction gate because the committed Step 30 record changes, and the marker proves Step 30 itself fired"
   },
   {
     "name": "M09c draw read little-endian (mocha: spec self-test)",

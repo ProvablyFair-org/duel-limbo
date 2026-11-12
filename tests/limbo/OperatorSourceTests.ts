@@ -2,7 +2,7 @@
  * Operator source, run as a SECOND CHECK (profile LIMBO-09).
  *
  * src/rng.ts is rebuilt from the written specification docs/ALGORITHM.md by an implementer who never
- * opened Duel's code (its own spec self-test is tests/limbo/RngSpecTests.ts). Duel's own Limbo Verify-tab code, pasted by Paulo from duel.com → Provably Fair → Verify (Limbo) on
+ * opened Duel's code (its own spec self-test is tests/limbo/RngSpecTests.ts). Duel's own Limbo Verify-tab code, pasted by ProvablyFair.org from duel.com → Provably Fair → Verify (Limbo) on
  * 2026-09-26, is vendored verbatim at evidence/verify-tab/duel-verify-tab-limbo-2026-09-26.js and
  * pinned in src/operator-verifier.ts. These tests:
  *   1. require the file and its runner to hash to their pins, and the file, run as shipped, to print

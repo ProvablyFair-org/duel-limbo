@@ -93,7 +93,7 @@ const results = [
 
 const infoItems: InfoItem[] = statistical.run(ctx);
 
-// ── RTP-CLAIM rule (1.2.0, Methodology v1.1; 1.0.0 agreed on Slack 2026-09-29) ──
+// ── RTP-CLAIM rule (1.2.0, Methodology v1.1; 1.0.0 adopted 2026-09-29) ──
 // The per-setting exact RTP table held to the published claim (src/rtp-settings.ts). The package
 // switch RTP_CLAIM_RULE_ENFORCED is true (D3, 2026-10-14). Status OVERSTATED (a house-side miss) is
 // scored on the step carrying LIMBO-19 as an operator-origin FLAG (the profile's policy) and the
@@ -120,7 +120,7 @@ if (rtpOverstated) {
 // A FLAG's ORIGIN decides whether it bears on the verdict (profile policy FLAG, decided 2026-09-17):
 // operator → Conditional Pass (exit 2); capture → disclosed, verdict-neutral (exit 0).
 // A flag with no origin defaults to operator, so an unclassified flag can only err toward disclosure.
-// An INFO step (profile policy INFORMATIONAL — the live-sample fit, Mike 2026-09-29) is reported and
+// An INFO step (profile policy INFORMATIONAL — the live-sample fit, adopted 2026-09-29) is reported and
 // never counted: it is not a flag and it never enters the verdict.
 const passed   = results.filter(r => r.status === 'PASS').length;
 const flags    = results.filter(r => r.status === 'FLAG').length;
